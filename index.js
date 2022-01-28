@@ -15,14 +15,15 @@ const supportedPlatforms = new Set([
 
 if (supportedPlatforms.has(process.platform)) {
   const m = (() => {
-    if (process.platform === 'aix') {
-      if (type() === 'OS400') {
-        require('./ibmi');
-      } else {
-        require('./sunos');
-      }
-    } else {
-      require(`./${process.platform}`);
+    switch (process.platform) {
+      case 'android': return require('./android');
+      case 'darwin': return require('./darwin');
+      case 'freebsd': return require('./freebsd');
+      case 'linux': return require('./linux');
+      case 'openbsd': return require('./openbsd');
+      case 'win32': return require('./win32');
+      case 'aix':
+        return type() === 'OS400' ? require('./ibmi') : require('./sunos');
     }
   })();
 
